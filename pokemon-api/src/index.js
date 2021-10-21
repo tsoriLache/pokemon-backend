@@ -1,13 +1,12 @@
 const express = require('express');
 const app = express();
 const port = 8080;
+const pokemonData = require('./pokemon-data');
+const pokemonRouter = require('./routers/pokemonRouter');
 
-const Pokedex = require('pokedex-promise-v2');
-const P = new Pokedex();
+app.use('/pokemon', pokemonRouter);
 
-const getPokeByName = async(nameOrId)=>{
-    await P.getPokemonByName(`${nameOrId}`); 
-}
+
 
 
 
