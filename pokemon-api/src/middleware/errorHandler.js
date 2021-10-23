@@ -1,9 +1,10 @@
-function errorHandler (err, req, res, next) {
-    if (res.headersSent) {
-      return next(err)
-    }
-    res.status(500)
-    res.render('error', { error: err })
+const { response } = require("express");
+
+const errorHandler = (error, request, response, next) => {
+  if(err) {
+      response.send(error);
   }
+  next();
+}
 
   module.exports = errorHandler;
