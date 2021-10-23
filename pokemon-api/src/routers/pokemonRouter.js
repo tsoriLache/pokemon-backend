@@ -9,26 +9,29 @@ const path = require('path');
 const bp = require('body-parser')
 router.use(bp.json())
 router.use(bp.urlencoded({ extended: true }))
-const userMiddleware = require('../middleware/userHandler');
 
 
 const getDataFromPokedex = async (idOrName)=>{
-    apiData= await P.getPokemonByName(`${idOrName}`)
-    pokemonData.name = apiData.name;
-    pokemonData.height = apiData.height, 
-    pokemonData.weight = apiData.weight,
-    pokemonData.front_pic = apiData.sprites.front_default,
-    pokemonData.back_pic = apiData.sprites.back_default,
-    pokemonData.types = apiData.types.map((type)=>type.type.name)
-    pokemonData.abilities = apiData.abilities.map((ability)=>ability.ability.name)
-    return;
+    try{
+        apiData= await P.getPokemonByName(`${idOrName}`)
+        pokemonData.name = apiData.name;
+        pokemonData.height = apiData.height, 
+        pokemonData.weight = apiData.weight,
+        pokemonData.front_pic = apiData.sprites.front_default,
+        pokemonData.back_pic = apiData.sprites.back_default,
+        pokemonData.types = apiData.types.map((type)=>type.type.name)
+        pokemonData.abilities = apiData.abilities.map((ability)=>ability.ability.name)
+        return;
+    }catch(error){
+        throw error;
+    }
 }
 
-router.use('/',userMiddleware);
 
 
 router.get('/', async function (request, response) {
     const pokemonsArray =[];
+    const  username = response.username;
     const files = await fsp.readdir(path.resolve(`users/${username}`));  
     for(let file of files){
         const fileData = await fsp.readFile(path.resolve(`users/${username}/${file}`));
@@ -51,12 +54,12 @@ router.get('/get/:id', async function (request, response) {
 })
 
 router.put('/catch/:id',function (request, response) {
-    const username = request.headers.username;
+    const username = response.username;
     const { id } = request.params;
     const pokemonObj = request.body
     const check = fs.existsSync(path.resolve(`users/${username}/${id}.json`));
     if(check){
-        response.status(403).send({ message: 'file already exist on the server'});
+        throw {status: 403, text: "You have Already caught this pokemon"}
     }else{
         fs.writeFile(path.resolve(`users/${username}/${id}.json`), JSON.stringify(pokemonObj),
              (err,data)=> {(err)? console.log(err) : console.log(data)});
@@ -66,7 +69,7 @@ router.put('/catch/:id',function (request, response) {
 
 
 router.delete('/release/:id',function (request, response) {
-    const username = request.headers.username;
+    const username = response.username;
     const { id } = request.params;
     const check = fs.existsSync(path.resolve(`users/${username}/${id}.json`));
     if(check){
@@ -74,7 +77,7 @@ router.delete('/release/:id',function (request, response) {
              (err) => {(err)? console.log(err) : console.log('path/file.txt was deleted')});
         response.send(`pokemon been deleted`);
     }else{
-        response.status(403).send({ message: 'file does not exist on the server'});
+        throw { status: 403, text: "Oops, You dont have this pokemon"};
     }
 })
 
