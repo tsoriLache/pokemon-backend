@@ -3,11 +3,10 @@ const x = async()=>{
     const res = await axios.put('http://localhost:8080/pokemon/catch/555', { pokemon: { name: 'ssss',
     height: 22,
     weight: 345}}, {
-        // headers: {
-        //   'username': 'tsori'
-        // }
+        headers: {
+          'username': 'tsori lache'
+        }
       })
-    console.log(res.body)    
 }
 
 
@@ -25,7 +24,10 @@ const z = async()=>{
 
 
 const r = async()=>{
-    let res=await axios.post('http://localhost:8080/pokemon/info',{username:'tdjnu kdfi'})  
-    console.log(res.data);
+    let res=await axios.post('http://localhost:8080/pokemon/signin',{username:'tsori lache'}, {
+      headers: {
+        'username': 'tsori lache'
+      }
+    })  
 }
 x()
