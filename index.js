@@ -19,10 +19,7 @@ app.use('/pokemon', userMiddleware ,pokemonRouter);
 app.use('/user',userMiddleware, userRouter);
 
 
-
-
-
-app.listen(process.env.PORT || 3000,
+app.listen(process.env.PORT || port,
   () => console.log("Server is running..."));
 
 
