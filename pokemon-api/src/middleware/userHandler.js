@@ -1,4 +1,5 @@
 const userMiddleware = async function(request, response, next) {
+    console.log(request.headers);
     const username = request.headers.username;
     if(username){
         response.username=username;

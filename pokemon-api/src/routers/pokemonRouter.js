@@ -14,6 +14,7 @@ router.use(bp.urlencoded({ extended: true }))
 const getDataFromPokedex = async (idOrName)=>{
     try{
         apiData= await P.getPokemonByName(`${idOrName}`)
+        pokemonData.id = apiData.id;
         pokemonData.name = apiData.name;
         pokemonData.height = apiData.height, 
         pokemonData.weight = apiData.weight,
@@ -69,6 +70,7 @@ router.put('/catch/:id',function (request, response) {
 
 
 router.delete('/release/:id',function (request, response) {
+    console.log('in');
     const username = response.username;
     const { id } = request.params;
     const check = fs.existsSync(path.resolve(`users/${username}/${id}.json`));
